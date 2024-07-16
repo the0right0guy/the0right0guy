@@ -1,0 +1,55 @@
+import random
+
+# Constants
+BOARD_SIZE = 100
+MAX_DICE_ROLL = 6
+NUM_SNAKES = 7
+NUM_LADDERS = 7
+
+# Snakes and Ladders positions (start -> end)
+snakes = {16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24}
+ladders = {3: 22, 5: 8, 11: 26, 20: 29, 27: 1, 39: 51, 63: 81}
+
+def roll_dice():
+    return random.randint(1, MAX_DICE_ROLL)
+
+def move_player(player, steps):
+    new_position = player['position'] + steps
+    if new_position <= BOARD_SIZE:
+        player['position'] = new_position
+        if new_position in snakes:
+            print(f"Oops, you landed on a snake! Slide down from {new_position} to {snakes[new_position]}.")
+            player['position'] = snakes[new_position]
+        elif new_position in ladders:
+            print(f"Yay, you found a ladder! Climb up from {new_position} to {ladders[new_position]}.")
+            player['position'] = ladders[new_position]
+        print(f"You are now at position {player['position']}.")
+    else:
+        print("You need exact dice roll to reach the finish line. Try again in the next turn.")
+
+def snakes_and_ladders_game():
+    print("Welcome to Snakes and Ladders!")
+
+    # Initialize players
+    players = [{'name': 'Player 1', 'position': 0}, {'name': 'Player 2', 'position': 0}]
+    current_player = 0
+
+    while True:
+        player = players[current_player]
+        print(f"\n{player['name']}'s turn.")
+        input("Press Enter to roll the dice...")
+        steps = roll_dice()
+        print(f"{player['name']} rolled a {steps}.")
+        move_player(player, steps)
+
+        # Check if the player wins
+        if player['position'] == BOARD_SIZE:
+            print(f"\nCongratulations, {player['name']}! You won the game!")
+            break
+
+        # Switch to the next player
+        current_player = (current_player + 1) % len(players)
+
+# Start the game
+if __name__ == "__main__":
+    snakes_and_ladders_game()
